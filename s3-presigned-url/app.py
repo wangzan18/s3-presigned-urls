@@ -17,9 +17,8 @@ def lambda_handler(event, context):
         Return doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html
     """
     url = boto3.client('s3').generate_presigned_url(
-        ClientMethod='get_object', 
-        Params={'Bucket': 'code.wzlinux.com', 'Key': event['queryStringParameters']['key']},
-        # Params={'Bucket': 'logs.transsion.com', 'Key': 'test.jpg'},
+        ClientMethod='put_object', 
+        Params={'Bucket': 'imgs.wzlinux.com', 'Key': event['queryStringParameters']['key']},
         ExpiresIn=3600)
 
     # print(url)
@@ -27,7 +26,7 @@ def lambda_handler(event, context):
         "statusCode": 200,
         "body": json.dumps({
             "url": url,
-            # "location": ip.text.replace("\n", "")
+            "key": event['queryStringParameters']['key']
         }),
     }
     
