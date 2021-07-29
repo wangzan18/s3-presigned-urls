@@ -1,5 +1,7 @@
 import boto3
 import json
+import os
+import random
     
 def lambda_handler(event, context):
     """Sample pure Lambda function
@@ -16,9 +18,13 @@ def lambda_handler(event, context):
     API Gateway Lambda Proxy Output Format: dict
         Return doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html
     """
+    bucket = os.environ.get('UploadBucket')
+    key = random.getrandbits(32)
     url = boto3.client('s3').generate_presigned_url(
         ClientMethod='put_object', 
-        Params={'Bucket': 'imgs.wzlinux.com', 'Key': event['queryStringParameters']['key']},
+        Params={'Bucket': bucket, 
+                'Key': str(key) + '.jpg',
+                'ContentType': 'image/jpeg'},
         ExpiresIn=3600)
 
     # print(url)
@@ -26,7 +32,7 @@ def lambda_handler(event, context):
         "statusCode": 200,
         "body": json.dumps({
             "url": url,
-            "key": event['queryStringParameters']['key']
+            "key": str(key) + '.jpg'
         }),
     }
     
