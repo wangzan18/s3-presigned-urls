@@ -35,5 +35,3 @@ def lambda_handler(event, context):
             "key": str(key) + '.jpg'
         }),
     }
-    
-# lambda_handler('13', '12')
